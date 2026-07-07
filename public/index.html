@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pup-Pal 🐕</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>🐕 Pup-Pal</h1>
+      <p class="tagline">Care for your pup — one daily to-do at a time.</p>
+    </header>
+
+    <main>
+      <!-- Creature stage -->
+      <section class="stage card">
+        <div class="pet-scene">
+          <div id="sprite" class="sprite" data-mood="content"></div>
+        </div>
+        <div class="pet-meta">
+          <h2 id="pet-name" contenteditable="true" spellcheck="false" title="Click to rename">Biscuit</h2>
+          <p class="breed"><span id="pet-breed">Shiba</span> · <span id="pet-mood">content</span></p>
+        </div>
+        <div id="stats" class="stats"></div>
+      </section>
+
+      <!-- Daily care checklist (CRUD) -->
+      <section class="checklist card">
+        <div class="checklist-head">
+          <h2>Today's care list</h2>
+          <span id="progress" class="progress">0 / 0</span>
+        </div>
+
+        <form id="task-form" class="task-form">
+          <input type="hidden" id="task-id" />
+          <input
+            type="text"
+            id="task-title"
+            placeholder="e.g. Evening walk"
+            maxlength="80"
+            required
+          />
+          <select id="task-category" required></select>
+          <button type="submit" id="task-submit">Add</button>
+          <button type="button" id="task-cancel" class="ghost hidden">Cancel</button>
+        </form>
+
+        <ul id="task-list" class="task-list"></ul>
+        <p id="empty" class="empty hidden">No care tasks yet — add one above.</p>
+      </section>
+    </main>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

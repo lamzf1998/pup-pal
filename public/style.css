@@ -1,0 +1,369 @@
+:root {
+  --bg: #fdf6ec;
+  --card: #ffffff;
+  --ink: #3a2e26;
+  --muted: #8a7a6d;
+  --accent: #e08b3c;
+  --accent-dark: #c0722a;
+  --line: #ecdfce;
+  --good: #5aa85a;
+  --mid: #e0a93c;
+  --bad: #d1584e;
+  --radius: 16px;
+  --shadow: 0 6px 20px rgba(120, 90, 50, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+header {
+  text-align: center;
+  padding: 28px 16px 8px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+/* ----------------------------------------------------------------- Pet stage */
+.pet-scene {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 200px;
+  background: linear-gradient(180deg, #eaf6ff 0%, #d9f0dc 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pet-scene::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  background: #bfe3b0;
+}
+
+.sprite {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  z-index: 1;
+  transform-origin: bottom center;
+  animation: bob 2.4s ease-in-out infinite;
+}
+
+.sprite[data-mood="happy"] {
+  animation: hop 0.9s ease-in-out infinite;
+}
+.sprite[data-mood="sleepy"] {
+  animation: breathe 3.4s ease-in-out infinite;
+}
+.sprite[data-mood="sick"] {
+  filter: saturate(0.6) brightness(0.95);
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes hop {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  40% { transform: translateY(-18px) scaleY(1.04); }
+  60% { transform: translateY(-14px); }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.pet-meta {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.pet-meta h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  outline: none;
+  border-radius: 6px;
+  display: inline-block;
+  padding: 0 6px;
+}
+
+.pet-meta h2:focus {
+  background: #fbeed8;
+}
+
+.breed {
+  margin: 2px 0 0;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+/* --------------------------------------------------------------------- Stats */
+.stats {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 90px 1fr 42px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.stat .label {
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+.bar {
+  height: 12px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.stat .val {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- Checklist */
+.checklist-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checklist-head h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.progress {
+  background: #fbeed8;
+  color: var(--accent-dark);
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.task-form {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.task-form input[type="text"] {
+  flex: 1 1 160px;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+button:hover {
+  background: var(--accent-dark);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+button.ghost:hover {
+  background: #f7efe3;
+}
+
+/* --------------------------------------------------------------- Task list */
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fffdf9;
+}
+
+.task.done {
+  opacity: 0.6;
+}
+
+.task.done .task-title {
+  text-decoration: line-through;
+}
+
+.task .check {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  flex: 0 0 auto;
+  color: transparent;
+}
+
+.task.done .check {
+  background: var(--good);
+  border-color: var(--good);
+  color: #fff;
+}
+
+.task .icon {
+  font-size: 1.3rem;
+}
+
+.task .task-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-weight: 600;
+}
+
+.task .cat {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.task .actions {
+  display: flex;
+  gap: 4px;
+}
+
+.task .actions button {
+  background: transparent;
+  color: var(--muted);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.task .actions button:hover {
+  background: #f2e9db;
+  color: var(--ink);
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 16px;
+}
+
+/* --------------------------------------------------------------------- Misc */
+.hidden {
+  display: none !important;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  animation: pop 0.2s ease;
+  z-index: 10;
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
