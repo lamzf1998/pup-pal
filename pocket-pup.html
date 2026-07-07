@@ -1,0 +1,1281 @@
+<style>
+  :root {
+    --font-display: "Segoe UI Rounded", "SF Pro Rounded", ui-rounded, "Nunito",
+      "Segoe UI", system-ui, sans-serif;
+    --font-body: system-ui, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "Consolas", monospace;
+
+    --page-bg: #efe7db;
+    --page-ink: #33302b;
+    --panel: #fffaf2;
+    --panel-ink: #3a352e;
+    --panel-muted: #8a7f70;
+    --line: #e7dcca;
+
+    --shell: #2a9d8f;
+    --shell-hi: #4ac6b6;
+    --shell-lo: #1c6b62;
+    --shell-ink: #eafaf6;
+
+    --screen: #d7e8b0;
+    --screen-lo: #c2d99a;
+    --screen-ink: #2f3a22;
+
+    --accent: #e8802f;
+    --accent-ink: #fff;
+
+    --good: #4f9d55;
+    --warn: #d99a2b;
+    --bad: #d1584e;
+
+    --radius: 18px;
+    --shadow: 0 10px 30px rgba(20, 60, 55, 0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #1a1714;
+      --page-ink: #ece4d7;
+      --panel: #2a2521;
+      --panel-ink: #ece4d7;
+      --panel-muted: #a89a88;
+      --line: #3a332c;
+
+      --shell: #23867b;
+      --shell-hi: #37ab9c;
+      --shell-lo: #12554d;
+      --shell-ink: #eafaf6;
+
+      --screen: #b9cf92;
+      --screen-lo: #a6bd7f;
+      --screen-ink: #222c17;
+
+      --accent: #ef8f45;
+      --good: #5fae63;
+      --warn: #e0a93c;
+      --bad: #df6b61;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --page-bg: #efe7db; --page-ink: #33302b; --panel: #fffaf2;
+    --panel-ink: #3a352e; --panel-muted: #8a7f70; --line: #e7dcca;
+    --shell: #2a9d8f; --shell-hi: #4ac6b6; --shell-lo: #1c6b62;
+    --screen: #d7e8b0; --screen-lo: #c2d99a; --screen-ink: #2f3a22;
+    --accent: #e8802f; --good: #4f9d55; --warn: #d99a2b; --bad: #d1584e;
+  }
+  :root[data-theme="dark"] {
+    --page-bg: #1a1714; --page-ink: #ece4d7; --panel: #2a2521;
+    --panel-ink: #ece4d7; --panel-muted: #a89a88; --line: #3a332c;
+    --shell: #23867b; --shell-hi: #37ab9c; --shell-lo: #12554d;
+    --screen: #b9cf92; --screen-lo: #a6bd7f; --screen-ink: #222c17;
+    --accent: #ef8f45; --good: #5fae63; --warn: #e0a93c; --bad: #df6b61;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(42, 157, 143, 0.14), transparent 60%),
+      var(--page-bg);
+    color: var(--page-ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 48px;
+    line-height: 1.5;
+  }
+
+  .brand {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .brand h1 {
+    font-family: var(--font-display);
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .brand .paw { color: var(--accent); }
+  .brand p {
+    margin: 4px 0 0;
+    color: var(--panel-muted);
+    font-size: 0.95rem;
+  }
+
+  /* ---------------------------------------------------------- the device */
+  .device {
+    width: min(960px, 100%);
+    background: linear-gradient(160deg, var(--shell-hi), var(--shell) 42%, var(--shell-lo));
+    border-radius: 34px;
+    padding: 26px;
+    box-shadow: var(--shadow),
+      inset 0 2px 0 rgba(255, 255, 255, 0.35),
+      inset 0 -6px 14px rgba(0, 0, 0, 0.22);
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 24px;
+  }
+  @media (max-width: 760px) {
+    .device { grid-template-columns: 1fr; }
+  }
+
+  /* embossed screw dots at the corners */
+  .device { position: relative; }
+  .device::before,
+  .device::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.6), rgba(0,0,0,.35));
+    top: 14px;
+  }
+  .device::before { left: 14px; }
+  .device::after { right: 14px; }
+
+  /* ------------------------------------------------------------ LCD side */
+  .console { display: flex; flex-direction: column; gap: 14px; }
+
+  .screen {
+    position: relative;
+    background: linear-gradient(170deg, var(--screen), var(--screen-lo));
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.28),
+      0 1px 0 rgba(255, 255, 255, 0.3);
+    color: var(--screen-ink);
+    overflow: hidden;
+  }
+  /* scanlines + glare — decorative */
+  .screen::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      to bottom, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 4px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .screen::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(120% 70% at 20% -10%, rgba(255,255,255,.4), transparent 55%);
+    pointer-events: none;
+  }
+
+  .screen-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 168px;
+    position: relative;
+    z-index: 1;
+  }
+  /* the pup roams around its pen; its shadow travels with it */
+  .runner {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    width: 150px;
+    z-index: 2;
+    transform: translateX(-50%);
+    animation: wander 8s ease-in-out infinite;
+  }
+  .runner[data-mood="happy"] { animation-duration: 4.6s; }
+  .runner[data-move="no"] { animation: none; left: 50%; }
+  .runner::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: -2px;
+    width: 84px; height: 10px;
+    margin-left: -42px;
+    border-radius: 50%;
+    background: var(--screen-ink);
+    opacity: 0.16;
+  }
+  @keyframes wander {
+    0%, 100% { left: 26%; }
+    20% { left: 72%; }
+    45% { left: 40%; }
+    68% { left: 74%; }
+    85% { left: 30%; }
+  }
+
+  .sprite {
+    width: 150px; height: 150px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transform-origin: bottom center;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  .sprite[data-mood="happy"] { animation: hop 0.9s ease-in-out infinite; }
+  .sprite[data-mood="sleepy"] { animation: breathe 3.4s ease-in-out infinite; }
+  .sprite[data-mood="sick"] { filter: saturate(0.55) brightness(0.96); }
+
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes hop {
+    0%,100%{transform:translateY(0) scaleY(1)}
+    40%{transform:translateY(-18px) scaleY(1.04)}
+    60%{transform:translateY(-14px)}
+  }
+  @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sprite, .sprite[data-mood], .bubble, .runner { animation: none; }
+  }
+
+  /* thought bubble — hints the pup's most urgent need */
+  .bubble {
+    position: absolute;
+    top: 4px;
+    left: 60%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #2f3a22;
+    border-radius: 12px;
+    padding: 3px 9px;
+    font-size: 1.15rem;
+    line-height: 1.2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+    pointer-events: none;
+    animation: bubblePop 0.3s ease;
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; left: 12px;
+    width: 8px; height: 8px;
+    background: inherit;
+    border-radius: 0 0 3px 0;
+    transform: rotate(45deg);
+  }
+  @keyframes bubblePop {
+    from { opacity: 0; transform: translateY(4px) scale(0.85); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* messes on the floor — grow while hygiene is neglected */
+  .messes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .mess {
+    position: absolute;
+    bottom: 8px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    pointer-events: auto;
+    background: none; border: none; padding: 0;
+    animation: plop 0.35s ease;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
+  }
+  .mess:hover { transform: scale(1.15); }
+  @keyframes plop {
+    from { opacity: 0; transform: translateY(-8px) scale(0.6); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* streak flame in the LCD header */
+  .streak { color: #e8802f; font-weight: 700; }
+  .streak.hidden { display: none; }
+
+  .nameplate { text-align: center; position: relative; z-index: 1; }
+  .nameplate h2 {
+    font-family: var(--font-display);
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    outline: none;
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 6px;
+  }
+  .nameplate h2:focus { background: rgba(47, 58, 34, 0.12); }
+  .nameplate .sub {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 2px;
+  }
+
+  /* segmented stat meters */
+  .meters { display: grid; gap: 9px; margin-top: 2px; }
+  .meter { position: relative; }
+  .meter .row {
+    display: grid;
+    grid-template-columns: 78px 1fr auto;
+    align-items: center;
+    gap: 8px;
+  }
+  .meter .name {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--panel-muted);
+  }
+  .segs {
+    display: flex;
+    gap: 3px;
+    height: 12px;
+  }
+  .segs i {
+    flex: 1;
+    border-radius: 2px;
+    background: var(--line);
+    transition: background 0.3s ease;
+  }
+  .meter .pct {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--panel-muted);
+    min-width: 34px;
+    text-align: right;
+  }
+  .float {
+    position: absolute;
+    right: 40px; top: -6px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--good);
+    animation: floatUp 1s ease forwards;
+    pointer-events: none;
+  }
+  .float.minus { color: var(--bad); }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(6px); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-14px); }
+  }
+
+  .meters-panel {
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 14px 14px 16px;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  /* --------------------------------------------------------- care panel */
+  .care {
+    background: var(--panel);
+    color: var(--panel-ink);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: inset 0 0 0 1px var(--line),
+      inset 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+  .care-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .care-head h3 {
+    font-family: var(--font-display);
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+  .care-head .date {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--panel-muted);
+  }
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 4px;
+  }
+  .progress .track {
+    flex: 1; height: 8px; border-radius: 999px;
+    background: var(--line); overflow: hidden;
+  }
+  .progress .track > span {
+    display: block; height: 100%; width: 0;
+    background: var(--accent); border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .progress .count {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--panel-muted);
+  }
+
+  form.add {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+  form.add input[type="text"] { flex: 1 1 150px; }
+  input, select, button {
+    font: inherit;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--panel-ink);
+  }
+  input:focus, select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+  button {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    transition: filter 0.15s ease, transform 0.05s ease;
+  }
+  button:hover { filter: brightness(1.06); }
+  button:active { transform: translateY(1px); }
+  button:focus-visible { outline: 2px solid var(--page-ink); outline-offset: 2px; }
+  button.ghost {
+    background: transparent;
+    color: var(--panel-muted);
+    border: 1px solid var(--line);
+  }
+  button.ghost:hover { background: var(--line); filter: none; }
+  button.small { padding: 5px 10px; font-size: 0.76rem; }
+
+  ul.tasks {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel);
+  }
+  .task.done { opacity: 0.62; }
+  .task.done .t-title { text-decoration: line-through; }
+  .check {
+    width: 26px; height: 26px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: var(--panel);
+    display: grid; place-items: center;
+    cursor: pointer;
+    padding: 0;
+    color: transparent;
+    font-size: 0.8rem;
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,.08);
+  }
+  .task.done .check {
+    background: var(--good);
+    border-color: var(--good);
+    color: #fff;
+  }
+  .task .emoji { font-size: 1.25rem; line-height: 1; }
+  .t-body { flex: 1; min-width: 0; }
+  .t-title { font-weight: 600; }
+  .t-cat {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--panel-muted);
+  }
+  .t-actions { display: flex; gap: 4px; }
+  .t-actions button {
+    background: transparent;
+    color: var(--panel-muted);
+    padding: 5px 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .t-actions button:hover { background: var(--line); color: var(--panel-ink); filter: none; }
+
+  .empty {
+    text-align: center;
+    color: var(--panel-muted);
+    padding: 20px 8px;
+    font-size: 0.92rem;
+  }
+
+  .footer-note {
+    margin-top: 18px;
+    font-size: 0.78rem;
+    color: var(--panel-muted);
+    text-align: center;
+    max-width: 520px;
+  }
+  .footer-note button {
+    background: none; color: var(--accent);
+    padding: 0; font-size: inherit; font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 22px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--page-ink);
+    color: var(--page-bg);
+    padding: 10px 18px;
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    font-size: 0.9rem;
+    z-index: 20;
+    animation: pop 0.2s ease;
+  }
+  @keyframes pop { from{opacity:0;transform:translate(-50%,8px)} to{opacity:1;transform:translate(-50%,0)} }
+  .hidden { display: none !important; }
+
+  /* clickable pup */
+  .sprite { cursor: pointer; }
+
+  /* illness overlay on the screen */
+  .screen { transition: box-shadow 0.4s ease; }
+  .screen.sick {
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.28),
+      inset 0 0 44px rgba(209, 88, 78, 0.5);
+  }
+
+  /* controls row: coat picker + mute */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .controls .ctrl {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--shell-ink);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .controls select { padding: 5px 8px; font-size: 0.8rem; }
+  .ctrl-btn {
+    background: var(--panel);
+    color: var(--panel-ink);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 5px 11px;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .ctrl-btn:hover { background: var(--line); filter: none; }
+</style>
+
+<div class="brand">
+  <h1><span class="paw">🐾</span> Pocket Pup</h1>
+  <p>Keep your pup happy — one daily care task at a time.</p>
+</div>
+
+<div class="device">
+  <!-- LCD console -->
+  <div class="console">
+    <div class="screen" id="screen">
+      <div class="screen-top">
+        <span id="clock">day 1</span>
+        <span id="streak" class="streak hidden"></span>
+        <span id="mood-badge">content</span>
+      </div>
+      <div class="stage">
+        <div id="messes" class="messes"></div>
+        <div id="runner" class="runner" data-move="yes" data-mood="content">
+          <div id="bubble" class="bubble hidden"></div>
+          <div id="sprite" class="sprite" data-mood="content"></div>
+        </div>
+      </div>
+      <div class="nameplate">
+        <h2 id="pet-name" contenteditable="true" spellcheck="false" title="Click to rename">Biscuit</h2>
+        <div class="sub">
+          <span id="pet-breed">Shiba</span> · <span id="pet-stage">puppy</span> ·
+          <span id="pet-health">80%</span> health
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <label class="ctrl">Coat <select id="coat-select"></select></label>
+      <button id="mute-btn" class="ctrl-btn" type="button" aria-label="Toggle sound">🔊</button>
+    </div>
+
+    <div class="meters-panel">
+      <div id="meters" class="meters"></div>
+    </div>
+  </div>
+
+  <!-- Care checklist -->
+  <div class="care">
+    <div class="care-head">
+      <h3>Today's care list</h3>
+      <span class="date" id="today"></span>
+    </div>
+
+    <div class="progress">
+      <div class="track"><span id="prog-fill"></span></div>
+      <span class="count" id="prog-count">0 / 0</span>
+      <button id="clear-done" class="ghost small hidden" type="button">Clear done</button>
+    </div>
+
+    <form class="add" id="add-form">
+      <input type="hidden" id="task-id" />
+      <input type="text" id="task-title" placeholder="e.g. Evening walk" maxlength="80" required />
+      <select id="task-cat" required></select>
+      <button type="submit" id="task-submit">Add</button>
+      <button type="button" id="task-cancel" class="ghost hidden">Cancel</button>
+    </form>
+
+    <ul class="tasks" id="task-list"></ul>
+    <p class="empty hidden" id="empty">No care tasks yet — add one above. 🐶</p>
+  </div>
+</div>
+
+<p class="footer-note">
+  Stats drain in real time and drive your pup's mood. Pet the dog for a boost, watch
+  the 💭 bubble for what it needs, scoop up any 💩, and clear the whole list daily for
+  a 🔥 streak. Let health bottom out and it gets 🤒 sick — cure it with a Vet task. Your
+  pup grows up over time. Progress is saved on this device.
+  <button id="reset-btn" type="button">Start over</button>
+</p>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+  "use strict";
+
+  // ------------------------------------------------------- care catalogue
+  const CATEGORIES = {
+    feed:  { label: "Feed",         stat: "fullness",  boost: 30, icon: "🍖" },
+    walk:  { label: "Walk",         stat: "energy",    boost: 25, icon: "🦮" },
+    play:  { label: "Play",         stat: "happiness", boost: 25, icon: "🎾" },
+    groom: { label: "Groom",        stat: "hygiene",   boost: 35, icon: "🛁" },
+    rest:  { label: "Rest",         stat: "energy",    boost: 40, icon: "😴" },
+    vet:   { label: "Vet / Health", stat: "happiness", boost: 15, icon: "💊" },
+  };
+  const STATS = ["fullness", "happiness", "energy", "hygiene"];
+  const DECAY_PER_HOUR = { fullness: 20, happiness: 15, energy: 18, hygiene: 12 };
+  const KEY = "pocket-pup:v1";
+
+  // gameplay tuning for the extra features
+  const MESS_INTERVAL_MS = 90 * 60 * 1000; // a new mess appears every ~90 min
+  const MAX_MESSES = 4;
+  const MESS_HYGIENE_DECAY = 3; // extra hygiene lost per hour, per mess on the floor
+  const MESS_CLEAN_BONUS = 6; // hygiene restored by scooping one mess
+  const STREAK_BONUS = 10; // happiness awarded for clearing the whole list in a day
+
+  // hint emoji shown in the thought bubble, by need
+  const NEED_HINT = { fullness: "🍖", happiness: "🎾", energy: "💤", hygiene: "🛁" };
+
+  // selectable coat colours (also names the breed)
+  const COATS = {
+    shiba: { label: "Shiba", body: "#e0952f", dark: "#d98a3d", mask: "#f6e6cf" },
+    husky: { label: "Husky", body: "#8a9199", dark: "#6f767e", mask: "#f2f4f6" },
+    choco: { label: "Choco", body: "#7d4a26", dark: "#653c1d", mask: "#e9d6b3" },
+    cream: { label: "Cream", body: "#e6cfa0", dark: "#d8bd86", mask: "#fbf3e2" },
+  };
+
+  const SICK_THRESHOLD = 12; // average health at/below this → the pup falls ill
+  const SICK_RECOVER = 40;   // health must climb back above this to recover naturally
+
+  // grows up over real days: puppy → adult → senior
+  function lifeStage(days) {
+    if (days < 3) return { name: "puppy", size: 122 };
+    if (days < 14) return { name: "adult", size: 150 };
+    return { name: "senior", size: 152, grey: true };
+  }
+
+  // ---- sound effects, synthesized with the Web Audio API (no asset files) ----
+  let audioCtx = null;
+  let justFellSick = false;
+  function tone(freq, startAt, dur, type = "sine", vol = 0.16) {
+    const t0 = audioCtx.currentTime + startAt;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g).connect(audioCtx.destination);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.03);
+  }
+  const SFX = {
+    happy: () => { tone(660, 0, 0.12, "triangle", 0.2); tone(880, 0.1, 0.16, "triangle", 0.2); },
+    bark: () => { tone(210, 0, 0.09, "square", 0.22); tone(150, 0.11, 0.13, "square", 0.2); },
+    clean: () => { tone(1200, 0, 0.08, "sine", 0.18); },
+    streak: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.08, 0.15, "triangle", 0.2)); },
+    sad: () => { tone(440, 0, 0.18, "sawtooth", 0.16); tone(220, 0.16, 0.3, "sawtooth", 0.15); },
+  };
+  function sfx(name) {
+    if (state.muted) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      (SFX[name] || (() => {}))();
+    } catch (_) {}
+  }
+
+  // ------------------------------------------------------------- storage
+  const clamp = (n) => Math.max(0, Math.min(100, n));
+  const todayKey = () => new Date().toISOString().slice(0, 10);
+  const dayKey = (offset) =>
+    new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
+  const uid = () =>
+    (crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now() + "-" + Math.round(Math.random() * 1e6));
+
+  function seed() {
+    const now = new Date().toISOString();
+    const tasks = [
+      ["Morning kibble", "feed"],
+      ["Round-the-block walk", "walk"],
+      ["Fetch in the yard", "play"],
+      ["Brush & bath", "groom"],
+      ["Afternoon nap", "rest"],
+      ["Evening walk", "walk"],
+      ["Tug-of-war", "play"],
+      ["Vet check-up", "vet"],
+    ].map(([title, category]) => ({
+      id: uid(), title, category, doneDate: null, createdAt: now, updatedAt: now,
+    }));
+    return {
+      pet: {
+        name: "Biscuit", breed: "Shiba", coat: "shiba", born: now,
+        stats: { fullness: 80, happiness: 80, energy: 80, hygiene: 80 },
+        lastTick: now,
+        streak: 0, lastFullDay: null, sick: false,
+      },
+      tasks,
+      messes: [],
+      lastMessAt: now,
+      muted: false,
+    };
+  }
+
+  // fill in fields that older saves won't have
+  function normalize(s) {
+    if (!s.pet.stats) s.pet.stats = { fullness: 80, happiness: 80, energy: 80, hygiene: 80 };
+    if (s.pet.streak == null) s.pet.streak = 0;
+    if (s.pet.lastFullDay === undefined) s.pet.lastFullDay = null;
+    if (!s.pet.coat) s.pet.coat = "shiba";
+    if (s.pet.sick == null) s.pet.sick = false;
+    if (!Array.isArray(s.messes)) s.messes = [];
+    if (!s.lastMessAt) s.lastMessAt = s.pet.lastTick;
+    if (s.muted == null) s.muted = false;
+    return s;
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) return normalize(JSON.parse(raw));
+    } catch (_) {}
+    const fresh = seed();
+    save(fresh);
+    return fresh;
+  }
+  function save(s) {
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (_) {}
+  }
+
+  let state = load();
+
+  // ---------------------------------------------------- time + mood logic
+  function tick() {
+    const last = new Date(state.pet.lastTick).getTime();
+    const now = Date.now();
+    const hours = Math.max(0, (now - last) / 3_600_000);
+    if (hours <= 0) return;
+
+    // spawn any messes that piled up over the elapsed time
+    let lastMess = new Date(state.lastMessAt).getTime();
+    while (state.messes.length < MAX_MESSES && now - lastMess >= MESS_INTERVAL_MS) {
+      lastMess += MESS_INTERVAL_MS;
+      state.messes.push({ x: Math.round(12 + Math.random() * 72) });
+    }
+    // if we're capped, hold the timer at "now" so cleaning doesn't instantly re-mess
+    state.lastMessAt = new Date(state.messes.length >= MAX_MESSES ? now : lastMess).toISOString();
+
+    for (const s of STATS) {
+      state.pet.stats[s] = clamp((state.pet.stats[s] ?? 80) - DECAY_PER_HOUR[s] * hours);
+    }
+    // a dirty floor drags hygiene down faster
+    if (state.messes.length) {
+      state.pet.stats.hygiene = clamp(
+        state.pet.stats.hygiene - state.messes.length * MESS_HYGIENE_DECAY * hours
+      );
+    }
+    // illness: being sick saps extra happiness until the pup is treated
+    if (state.pet.sick) {
+      state.pet.stats.happiness = clamp(
+        state.pet.stats.happiness - DECAY_PER_HOUR.happiness * 0.6 * hours
+      );
+    }
+    const avgHealth = STATS.reduce((a, s) => a + state.pet.stats[s], 0) / STATS.length;
+    if (!state.pet.sick && avgHealth <= SICK_THRESHOLD) {
+      state.pet.sick = true;
+      justFellSick = true;
+    } else if (state.pet.sick && avgHealth >= SICK_RECOVER) {
+      state.pet.sick = false;
+    }
+    state.pet.lastTick = new Date(now).toISOString();
+    breakStreakIfStale();
+    save(state);
+  }
+
+  // streaks reset if a full day passed without clearing the whole list
+  function breakStreakIfStale() {
+    const lfd = state.pet.lastFullDay;
+    if (lfd && lfd !== todayKey() && lfd !== dayKey(-1)) state.pet.streak = 0;
+  }
+
+  // award a streak the moment the last open task of the day is completed
+  function awardStreakIfComplete() {
+    const today = todayKey();
+    const done = state.tasks.length > 0 && state.tasks.every((t) => t.doneDate === today);
+    if (!done || state.pet.lastFullDay === today) return 0;
+    state.pet.streak = state.pet.lastFullDay === dayKey(-1) ? state.pet.streak + 1 : 1;
+    state.pet.lastFullDay = today;
+    state.pet.stats.happiness = clamp(state.pet.stats.happiness + STREAK_BONUS);
+    save(state);
+    return state.pet.streak;
+  }
+
+  function needHint() {
+    const st = state.pet.stats;
+    if (st.energy <= 15) return NEED_HINT.energy;
+    let lowStat = STATS[0];
+    for (const s of STATS) if (st[s] < st[lowStat]) lowStat = s;
+    if (st[lowStat] < 45) return NEED_HINT[lowStat];
+    const avg = STATS.reduce((a, s) => a + st[s], 0) / STATS.length;
+    return avg >= 80 ? "💛" : "";
+  }
+
+  function mood() {
+    const st = state.pet.stats;
+    const avg = STATS.reduce((a, s) => a + st[s], 0) / STATS.length;
+    if (st.energy <= 15) return "sleepy";
+    if (avg >= 75) return "happy";
+    if (avg >= 45) return "content";
+    if (avg >= 20) return "sad";
+    return "sick";
+  }
+  const health = () =>
+    Math.round(STATS.reduce((a, s) => a + state.pet.stats[s], 0) / STATS.length);
+
+  // --------------------------------------------------------- dog sprite
+  function dogSvg(m, coat, opts = {}) {
+    const c = coat || COATS.shiba;
+    const size = opts.size || 150;
+    const senior = opts.grey ? `
+        <path d="M59 73 q6 -3 12 0" stroke="#d7d1c6" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M79 73 q6 -3 12 0" stroke="#d7d1c6" stroke-width="3" fill="none" stroke-linecap="round"/>` : "";
+    const faces = {
+      happy: `
+        <path d="M58 82 q7 -8 14 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+        <path d="M78 82 q7 -8 14 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+        <path d="M62 96 q13 16 26 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+        <path d="M70 100 q5 10 10 0 z" fill="#e26d6d"/>`,
+      content: `
+        <circle cx="65" cy="84" r="4" fill="#3a2e26"/>
+        <circle cx="85" cy="84" r="4" fill="#3a2e26"/>
+        <path d="M64 97 q11 8 22 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>`,
+      sad: `
+        <circle cx="65" cy="86" r="4" fill="#3a2e26"/>
+        <circle cx="85" cy="86" r="4" fill="#3a2e26"/>
+        <path d="M60 80 q6 -4 10 -1" fill="none" stroke="#3a2e26" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M80 79 q4 -3 10 1" fill="none" stroke="#3a2e26" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M64 100 q11 -8 22 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>`,
+      sick: `
+        <path d="M60 82 l8 6 M68 82 l-8 6" stroke="#3a2e26" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M82 82 l8 6 M90 82 l-8 6" stroke="#3a2e26" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M64 100 q11 -6 22 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>`,
+      sleepy: `
+        <path d="M60 85 q5 4 10 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+        <path d="M80 85 q5 4 10 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+        <path d="M66 98 q9 5 16 0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+        <text x="100" y="60" font-size="16" fill="#3a2e26" opacity="0.6">z</text>
+        <text x="110" y="46" font-size="22" fill="#3a2e26" opacity="0.6">Z</text>`,
+    };
+    return `
+    <svg viewBox="0 0 150 150" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M112 118 q22 -6 14 -30 q-3 16 -18 20 z" fill="${c.dark}"/>
+      <ellipse cx="75" cy="120" rx="34" ry="24" fill="${c.body}"/>
+      <ellipse cx="75" cy="126" rx="22" ry="14" fill="${c.mask}"/>
+      <path d="M46 60 l6 -34 l20 20 z" fill="${c.dark}"/>
+      <path d="M104 60 l-6 -34 l-20 20 z" fill="${c.dark}"/>
+      <path d="M52 52 l3 -18 l11 11 z" fill="${c.mask}"/>
+      <path d="M98 52 l-3 -18 l-11 11 z" fill="${c.mask}"/>
+      <circle cx="75" cy="78" r="34" fill="${c.body}"/>
+      <path d="M55 82 q20 26 40 0 q0 22 -20 24 q-20 -2 -20 -24 z" fill="${c.mask}"/>
+      <ellipse cx="75" cy="90" rx="5" ry="3.5" fill="#3a2e26"/>
+      ${faces[m] || faces.content}
+      ${senior}
+    </svg>`;
+  }
+
+  // ------------------------------------------------------------- render
+  const $ = (id) => document.getElementById(id);
+
+  function segColor(v) {
+    if (v >= 60) return "var(--good)";
+    if (v >= 30) return "var(--warn)";
+    return "var(--bad)";
+  }
+
+  function renderPet(boosts) {
+    const days = Math.max(1, Math.floor((Date.now() - new Date(state.pet.born).getTime()) / 86_400_000) + 1);
+    const stg = lifeStage(days);
+    const coat = COATS[state.pet.coat] || COATS.shiba;
+    const displayMood = state.pet.sick ? "sick" : mood();
+
+    $("sprite").dataset.mood = displayMood;
+    $("sprite").innerHTML = dogSvg(displayMood, coat, { size: stg.size, grey: stg.grey });
+
+    // run around normally; stand still when sleepy or sick
+    const runner = $("runner");
+    runner.dataset.mood = displayMood;
+    runner.dataset.move = displayMood === "sleepy" || displayMood === "sick" ? "no" : "yes";
+    $("pet-name").textContent = state.pet.name;
+    $("pet-breed").textContent = state.pet.breed;
+    $("pet-stage").textContent = stg.name;
+    $("pet-health").textContent = health() + "%";
+    $("mood-badge").textContent = state.pet.sick ? "🤒 unwell" : displayMood;
+    document.querySelector(".screen").classList.toggle("sick", state.pet.sick);
+
+    $("clock").textContent = "day " + days;
+
+    // announce a new illness (once), with a sad note
+    if (justFellSick) {
+      justFellSick = false;
+      sfx("sad");
+      toast(`🤒 ${state.pet.name} feels sick — complete a Vet task!`);
+    }
+
+    // streak flame
+    const streakEl = $("streak");
+    if (state.pet.streak > 0) {
+      streakEl.textContent = "🔥 " + state.pet.streak;
+      streakEl.classList.remove("hidden");
+    } else {
+      streakEl.classList.add("hidden");
+    }
+
+    // thought bubble
+    const hint = state.pet.sick ? "🤒" : needHint();
+    const bubble = $("bubble");
+    if (hint) { bubble.textContent = hint; bubble.classList.remove("hidden"); }
+    else { bubble.classList.add("hidden"); }
+
+    // messes on the floor
+    $("messes").innerHTML = state.messes
+      .map((m, i) => `<button class="mess" data-i="${i}" style="left:${m.x}%" title="Scoop it up">💩</button>`)
+      .join("");
+
+    $("meters").innerHTML = STATS.map((s) => {
+      const v = Math.round(state.pet.stats[s]);
+      const filled = Math.round(v / 10);
+      const segs = Array.from({ length: 10 }, (_, i) =>
+        `<i style="background:${i < filled ? segColor(v) : "var(--line)"}"></i>`).join("");
+      const fl = boosts && boosts[s]
+        ? `<span class="float ${boosts[s] < 0 ? "minus" : ""}">${boosts[s] > 0 ? "+" : ""}${boosts[s]}</span>`
+        : "";
+      return `
+        <div class="meter">
+          <div class="row">
+            <span class="name">${s}</span>
+            <div class="segs">${segs}</div>
+            <span class="pct">${v}</span>
+          </div>${fl}
+        </div>`;
+    }).join("");
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function renderTasks() {
+    const today = todayKey();
+    const tasks = state.tasks
+      .map((t) => ({ ...t, done: t.doneDate === today, ...CATEGORIES[t.category] }))
+      .sort((a, b) => Number(a.done) - Number(b.done) || a.title.localeCompare(b.title));
+
+    $("empty").classList.toggle("hidden", tasks.length > 0);
+    const done = tasks.filter((t) => t.done).length;
+    $("prog-count").textContent = `${done} / ${tasks.length}`;
+    $("prog-fill").style.width = tasks.length ? (done / tasks.length) * 100 + "%" : "0%";
+
+    const clearBtn = $("clear-done");
+    if (done > 0) {
+      clearBtn.textContent = `Clear done (${done})`;
+      clearBtn.classList.remove("hidden");
+    } else {
+      clearBtn.classList.add("hidden");
+    }
+
+    $("task-list").innerHTML = tasks.map((t) => `
+      <li class="task ${t.done ? "done" : ""}" data-id="${t.id}">
+        <button class="check" data-act="toggle" aria-label="Toggle done">✓</button>
+        <span class="emoji">${t.icon}</span>
+        <div class="t-body">
+          <div class="t-title">${escapeHtml(t.title)}</div>
+          <div class="t-cat">${t.label} · +${t.boost} ${t.stat}</div>
+        </div>
+        <div class="t-actions">
+          <button data-act="edit">Edit</button>
+          <button data-act="delete">Delete</button>
+        </div>
+      </li>`).join("");
+  }
+
+  function renderAll(boosts) {
+    tick();
+    renderPet(boosts);
+    renderTasks();
+  }
+
+  // -------------------------------------------------------------- toast
+  let toastTimer;
+  function toast(msg) {
+    const el = $("toast");
+    el.textContent = msg;
+    el.classList.remove("hidden");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.add("hidden"), 2000);
+  }
+
+  // ------------------------------------------------------- form / events
+  const form = $("add-form");
+  const idField = $("task-id");
+  const titleField = $("task-title");
+  const catField = $("task-cat");
+  const submitBtn = $("task-submit");
+  const cancelBtn = $("task-cancel");
+
+  catField.innerHTML = Object.entries(CATEGORIES)
+    .map(([k, c]) => `<option value="${k}">${c.icon} ${c.label}</option>`)
+    .join("");
+
+  function resetForm() {
+    idField.value = "";
+    titleField.value = "";
+    catField.selectedIndex = 0;
+    submitBtn.textContent = "Add";
+    cancelBtn.classList.add("hidden");
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = titleField.value.trim();
+    const category = catField.value;
+    if (!title || !CATEGORIES[category]) { toast("Give the task a title first."); return; }
+    const now = new Date().toISOString();
+    if (idField.value) {
+      const t = state.tasks.find((x) => x.id === idField.value);
+      if (t) { t.title = title; t.category = category; t.updatedAt = now; }
+      toast("Task updated");
+    } else {
+      state.tasks.push({ id: uid(), title, category, doneDate: null, createdAt: now, updatedAt: now });
+      toast("Task added");
+    }
+    save(state);
+    resetForm();
+    renderTasks();
+  });
+
+  cancelBtn.addEventListener("click", resetForm);
+
+  // remove every task completed today at once — no penalty, they've done their job
+  $("clear-done").addEventListener("click", () => {
+    const today = todayKey();
+    const count = state.tasks.filter((t) => t.doneDate === today).length;
+    if (!count) return;
+    state.tasks = state.tasks.filter((t) => t.doneDate !== today);
+    save(state);
+    renderTasks();
+    toast(`Cleared ${count} completed task${count > 1 ? "s" : ""}`);
+  });
+
+  // scoop a mess off the floor
+  $("messes").addEventListener("click", (e) => {
+    const btn = e.target.closest(".mess");
+    if (!btn) return;
+    const i = Number(btn.dataset.i);
+    if (!state.messes[i]) return;
+    tick();
+    state.messes.splice(i, 1);
+    state.pet.stats.hygiene = clamp(state.pet.stats.hygiene + MESS_CLEAN_BONUS);
+    save(state);
+    sfx("clean");
+    renderPet({ hygiene: MESS_CLEAN_BONUS });
+    toast(`Scooped! +${MESS_CLEAN_BONUS} hygiene`);
+  });
+
+  // pet the dog — click the sprite for a bark and a little happiness
+  let lastPet = 0;
+  $("sprite").addEventListener("click", () => {
+    sfx("bark");
+    const now = Date.now();
+    if (now - lastPet < 1200) return; // treat, not a spam-heal
+    lastPet = now;
+    tick();
+    const before = state.pet.stats.happiness;
+    state.pet.stats.happiness = clamp(before + 3);
+    save(state);
+    renderPet({ happiness: Math.round(state.pet.stats.happiness - before) });
+  });
+
+  $("task-list").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    const li = e.target.closest(".task");
+    const id = li.dataset.id;
+    const act = btn.dataset.act;
+    const task = state.tasks.find((t) => t.id === id);
+    if (!task) return;
+
+    if (act === "toggle") {
+      const cat = CATEGORIES[task.category];
+      const today = todayKey();
+      const wasDone = task.doneDate === today;
+      tick();
+      const before = state.pet.stats[cat.stat];
+      let cured = false;
+      if (wasDone) {
+        task.doneDate = null;
+        state.pet.stats[cat.stat] = clamp(before - cat.boost);
+      } else {
+        task.doneDate = today;
+        state.pet.stats[cat.stat] = clamp(before + cat.boost);
+        if (task.category === "groom") state.messes = []; // a good groom tidies the floor
+        if (task.category === "vet" && state.pet.sick) { state.pet.sick = false; cured = true; }
+      }
+      task.updatedAt = new Date().toISOString();
+      save(state);
+      const delta = Math.round(state.pet.stats[cat.stat] - before);
+      const gained = wasDone ? 0 : awardStreakIfComplete();
+      renderPet({ [cat.stat]: delta });
+      renderTasks();
+      if (!wasDone) sfx(gained ? "streak" : "happy");
+      if (gained) toast(`🔥 ${gained}-day streak! +${STREAK_BONUS} happiness`);
+      else if (cured) toast("💊 All better — sickness cured!");
+    } else if (act === "delete") {
+      const cat = CATEGORIES[task.category];
+      const wasDoneToday = task.doneDate === todayKey();
+      tick();
+      const before = state.pet.stats[cat.stat];
+      // An unfinished activity leaves its need unmet, so dock the stat. A task
+      // already completed today has done its job — removing it costs nothing.
+      if (!wasDoneToday) state.pet.stats[cat.stat] = clamp(before - cat.boost);
+      state.tasks = state.tasks.filter((t) => t.id !== id);
+      save(state);
+      const delta = Math.round(state.pet.stats[cat.stat] - before);
+      renderPet(delta ? { [cat.stat]: delta } : undefined);
+      renderTasks();
+      toast(wasDoneToday
+        ? "Removed — already done, no penalty"
+        : `Removed — ${cat.stat} dropped ${Math.abs(delta)}`);
+    } else if (act === "edit") {
+      idField.value = id;
+      titleField.value = task.title;
+      catField.value = task.category;
+      submitBtn.textContent = "Save";
+      cancelBtn.classList.remove("hidden");
+      titleField.focus();
+    }
+  });
+
+  // rename pet
+  const nameEl = $("pet-name");
+  nameEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); nameEl.blur(); }
+  });
+  nameEl.addEventListener("blur", () => {
+    const name = nameEl.textContent.trim().slice(0, 40);
+    if (name) { state.pet.name = name; save(state); toast("Renamed!"); }
+    renderPet();
+  });
+
+  $("reset-btn").addEventListener("click", () => {
+    const muted = state.muted; // keep the sound preference across a reset
+    state = seed();
+    state.muted = muted;
+    save(state);
+    resetForm();
+    coatSelect.value = state.pet.coat;
+    renderAll();
+    toast("Fresh start — say hi to Biscuit!");
+  });
+
+  // coat picker
+  const coatSelect = $("coat-select");
+  coatSelect.innerHTML = Object.entries(COATS)
+    .map(([k, c]) => `<option value="${k}">${c.label}</option>`)
+    .join("");
+  coatSelect.addEventListener("change", () => {
+    const key = coatSelect.value;
+    if (!COATS[key]) return;
+    state.pet.coat = key;
+    state.pet.breed = COATS[key].label;
+    save(state);
+    sfx("happy");
+    renderPet();
+  });
+
+  // mute toggle
+  const muteBtn = $("mute-btn");
+  muteBtn.addEventListener("click", () => {
+    state.muted = !state.muted;
+    save(state);
+    muteBtn.textContent = state.muted ? "🔇" : "🔊";
+    if (!state.muted) sfx("happy");
+  });
+
+  // -------------------------------------------------------------- init
+  $("today").textContent = new Date().toLocaleDateString(undefined, {
+    weekday: "short", month: "short", day: "numeric",
+  });
+  coatSelect.value = state.pet.coat;
+  muteBtn.textContent = state.muted ? "🔇" : "🔊";
+  renderAll();
+  // keep the pup ticking while the tab stays open
+  setInterval(() => renderAll(), 60_000);
+</script>

@@ -54,6 +54,33 @@ case for a tired pup:
 | 😔 sad    | `avg` ≥ 20                    |
 | 🤒 sick   | below 20                      |
 
+## Two editions
+
+This repo ships two versions of the game:
+
+1. **Server edition** (`server.js` + `public/`) — the Express + flat-JSON CRUD
+   app described above.
+2. **Pocket Pup** (`pocket-pup.html`) — a single self-contained, no-build,
+   client-only edition with an expanded feature set. Just open the file in a
+   browser; everything (state included) lives on-device in `localStorage`.
+
+### Pocket Pup extras
+
+On top of the core care loop, the standalone `pocket-pup.html` adds:
+
+- **A dog that runs around** its pen, with a mood-driven pace (faster when
+  happy, still when sleepy or sick).
+- **Thought bubbles** hinting the pup's most urgent need.
+- **Mess & cleanup** — 💩 appears over time, drags hygiene down, and is cleared
+  by scooping or a Groom task.
+- **Daily streaks** — clear the whole list each day for a happiness bonus.
+- **Sound effects** (synthesized via Web Audio, with a mute toggle).
+- **Pet the dog** — click the sprite for a bark and a happiness boost.
+- **Life stages** — puppy → adult → senior as the pup ages.
+- **Coat picker** — Shiba / Husky / Choco / Cream.
+- **Sickness & recovery** — health bottoming out makes the pup ill until a Vet
+  task cures it.
+
 ## Run it
 
 ```bash
@@ -62,15 +89,18 @@ npm install
 npm start        # or: npm run dev  (auto-restart on changes)
 ```
 
-Then open http://localhost:3001.
+Then open http://localhost:3001. For the standalone edition, just open
+`pocket-pup.html` directly in a browser — no server needed.
 
 The port can be overridden with the `PORT` environment variable
 (e.g. `PORT=4000 npm start`). Requires **Node.js 18+** (for `crypto.randomUUID`
 and `--watch`).
 
-Data is persisted to flat JSON files under `data/` (`pet.json`, `tasks.json`),
-created and seeded automatically on first run. Both files are git-ignored, so
-deleting the `data/` folder resets your pup to a fresh Shiba named *Biscuit*.
+Server data is persisted to flat JSON files under `data/` (`pet.json`,
+`tasks.json`), created and seeded automatically on first run. Both files are
+git-ignored, so deleting the `data/` folder resets your pup to a fresh Shiba
+named *Biscuit*. (The standalone `pocket-pup.html` keeps its state in the
+browser's `localStorage` instead.)
 
 ## CRUD API
 
