@@ -203,8 +203,9 @@ document.getElementById('task-list').addEventListener('click', async (e) => {
       renderPet(pet);
       await refreshTasks();
     } else if (act === 'delete') {
-      await api.send(`/api/tasks/${id}`, 'DELETE');
-      toast('Task removed');
+      const { pet } = await api.send(`/api/tasks/${id}`, 'DELETE');
+      if (pet) renderPet(pet);
+      toast('Task removed — the pup misses it');
       await refreshTasks();
     } else if (act === 'edit') {
       const title = li.querySelector('.task-title').textContent;

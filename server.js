@@ -23,10 +23,10 @@ const STATS = ['fullness', 'happiness', 'energy', 'hygiene'];
 
 // How many points a stat drains per real hour of neglect.
 const DECAY_PER_HOUR = {
-  fullness: 4,
-  happiness: 3,
-  energy: 3.5,
-  hygiene: 2,
+  fullness: 20,
+  happiness: 15,
+  energy: 18,
+  hygiene: 12,
 };
 
 // Care categories map a task to the stat it restores and how much.
@@ -255,14 +255,20 @@ app.post('/api/tasks/:id/toggle', (req, res) => {
   });
 });
 
-// Delete
+// Delete — dropping a care activity leaves that need unmet, so dock the stat.
 app.delete('/api/tasks/:id', (req, res) => {
   const tasks = readJson(TASKS_FILE);
   const idx = tasks.findIndex((t) => t.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Task not found' });
   const [removed] = tasks.splice(idx, 1);
   writeJson(TASKS_FILE, tasks);
-  res.json(removed);
+
+  const cat = CATEGORIES[removed.category];
+  const pet = tickPet();
+  pet.stats[cat.stat] = clamp(pet.stats[cat.stat] - cat.boost);
+  writeJson(PET_FILE, pet);
+
+  res.json({ removed, pet: decoratePet(pet) });
 });
 
 app.listen(PORT, () => {
